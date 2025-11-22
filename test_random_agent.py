@@ -1,51 +1,53 @@
 from pettingzoo.classic import connect_four_v3
 from random_agent import RandomAgent
+from random_agent import WeightedRandomAgent
+from loguru import logger
 import time
-import math
 
-env = connect_four_v3.env(render_mode="human") # ou render_mode="rdb_array" ou bien None
-env.reset(seed=42)
-#Initialisation des 2 agents "bêtes" de la classe RandomAgent
-dumb_player_0=RandomAgent(env,"lvl_0_Alpha")
-dumb_player_1=RandomAgent(env,"lvl_0_Beta")
 
-mapping_agents={"player_0":dumb_player_0,"player_1":dumb_player_1}
-#On attribue un nom de joueur de PettingZoo à chaque agent
+def run_demo_game(): #Test visuel d'une partie entre 2 agents de la classe RandomAgent
+    env = connect_four_v3.env(render_mode="human") 
+    env.reset(seed=42)
 
-debut=time.time()
-for agent in env.agent_iter():
-    observation, reward, termination, truncation, info = env.last()
+    dumb_player_0 = RandomAgent(env, "player_0")
+    dumb_player_1 = RandomAgent(env, "player_1")
+    mapping_agents = {"player_0": dumb_player_0, "player_1": dumb_player_1}
+    #On associe player_0 l'agent 0 de PettingZoo à notre agent de la
+    #classe RandomAgent et idem pour player_1
+    start_time = time.time() #Pour mesurer le temps d'une partie
 
-    if termination or truncation:
-        action = None
-        if reward == 1:
-            print(f"{agent} wins!")
-        elif reward == 0:
-            print("It's a draw!")
-    else:
-        current_player=mapping_agents[agent]
-        mask = observation["action_mask"]
-        #On a le choix entre les 2 méthodes ici: la méthode random avec le 
-        #module random de Python ou la méthode aléatoire utilisant
-        #.sample() de PettingZoo
-        action = current_player.choose_action_manual(observation,reward,termination,truncation,info,mask)
-        print(f"{agent} plays column {action}")
+    for agent in env.agent_iter():
+        observation, reward, termination, truncation, info = env.last()
 
-    env.step(action)
-fin=time.time()
+        if termination or truncation:
+            action = None
+            if reward == 1:
+                logger.info(f"Victoire de {agent} !") 
+            elif reward == 0:
+                logger.info("Match Nul !")
+        else:
+            current_player = mapping_agents[agent]
+            mask = observation["action_mask"]
+            action = current_player.choose_action(observation, reward, termination, truncation, info, mask)
+            #Méthode de la classe RandomAgent avec le module Random
+            logger.info(f"{current_player.player_name} ({agent}) joue colonne {action}")
 
-env.close()
-print(f"{fin-debut:.2f}")
+        env.step(action)
 
-def stat_games(num_games=100):
-    env = connect_four_v3.env(render_mode=None) 
+    end_time = time.time()
+    env.close()
+    logger.info(f"Durée : {end_time-start_time:.2f} secondes\n")
+
+
+def stat_games(num_games=100):#Statistiques pour num_games parties
+    env = connect_four_v3.env(render_mode=None) #render_mode non visuel pour accéler le processus
     
     Length_game=[]
-    dumb_player_0=RandomAgent(env,"lvl_0_Alpha")
-    dumb_player_1=RandomAgent(env,"lvl_0_Beta")
+    dumb_player_0=RandomAgent(env,"player_0")
+    dumb_player_1=RandomAgent(env,"player_1")
 
     mapping_agents={"player_0":dumb_player_0,"player_1":dumb_player_1}
-    average_time=0
+ 
     player0_win_count=0
     player1_win_count=0
     
@@ -54,7 +56,7 @@ def stat_games(num_games=100):
     for i in range(num_games):
         moves_count=0
         env.reset()
-        start_time=time.time()
+
         for agent in env.agent_iter():
             observation, reward, termination, truncation, info = env.last()
 
@@ -73,17 +75,12 @@ def stat_games(num_games=100):
                 current_player=mapping_agents[agent]
                 mask = observation["action_mask"]
           
-                action = current_player.choose_action_manual(observation,reward,termination,truncation,info,mask)
+                action = current_player.choose_action(observation,reward,termination,truncation,info,mask)
                 moves_count+=1
             env.step(action)
         Length_game.append(moves_count)
         mean_moves+=moves_count/num_games
-            
-
-            
-        end_time=time.time()
-        average_time+=(end_time-start_time)/num_games
 
     env.close()
-    return player0_win_count,player1_win_count,mean_moves,min(Length_game),max(Length_game),num_draw
-print(stat_games(100))
+    return player0_win_count,player1_win_count,int(mean_moves),min(Length_game),max(Length_game),num_draw
+           #On retourne les statistiques
