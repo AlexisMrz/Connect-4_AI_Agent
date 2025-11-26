@@ -25,12 +25,12 @@ class SmartAgent:
         else:
             board = observation
     
-        winning_move = self._find_winning_move(observation, valid_actions, channel=0)
+        winning_move = self._find_winning_move(board, valid_actions, channel=0)
         if winning_move is not None:
             logger.success(f"{self.player_name}: WINNING MOVE -> column {winning_move}")
             return winning_move
 
-        blocking_move = self._find_winning_move(observation, valid_actions, channel=1)
+        blocking_move = self._find_winning_move(board, valid_actions, channel=1)
         if blocking_move is not None:
             logger.warning(f"{self.player_name}: BLOCKING -> column {blocking_move}")
             return blocking_move

@@ -127,5 +127,3 @@ def stat_games(num_games=100):#Statistiques avec maintenant l'agent
     return player0_win_count,player1_win_count,int(mean_moves),min(Length_game),max(Length_game),num_draw
            #On retourne les statistiques
 
-
-
