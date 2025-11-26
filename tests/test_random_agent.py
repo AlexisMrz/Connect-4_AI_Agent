@@ -1,9 +1,12 @@
 from pettingzoo.classic import connect_four_v3
-from random_agent import RandomAgent
-from random_agent import WeightedRandomAgent
 from loguru import logger
 import time
-
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+#Permet d'inclure les modules de la racine
+from random_agent import RandomAgent
+from random_agent import WeightedRandomAgent
 
 def run_demo_game(): #Test visuel d'une partie entre 2 agents de la classe RandomAgent
     env = connect_four_v3.env(render_mode="human") 

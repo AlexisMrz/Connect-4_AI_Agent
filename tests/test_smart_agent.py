@@ -1,6 +1,9 @@
 import numpy as np
 import pytest
 from pettingzoo.classic import connect_four_v3
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from smart_agent import SmartAgent
 from random_agent import RandomAgent
 from loguru import logger
