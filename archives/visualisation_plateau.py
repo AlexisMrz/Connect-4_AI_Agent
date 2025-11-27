@@ -1,15 +1,7 @@
 from pettingzoo.classic import connect_four_v3
 
-
 def print_board(observation):
-    """
-    Print a human-readable version of the board
-
-    observation: numpy array of shape (6, 7, 2)
-        observation[:,:,0] = current player's pieces
-        observation[:,:,1] = opponent's pieces
-    """
-
+    """Affiche le tableau visuellement compréhensible pour l'humain"""
     for i in range(6):
         for j in range(7):
             if observation[i,j,0]==1:
@@ -20,7 +12,6 @@ def print_board(observation):
                 print('.',end="")
         print()
     pass
-
 
 env = connect_four_v3.env()
 env.reset(seed=42)

@@ -1,5 +1,4 @@
 import numpy as np
-import pytest
 from pettingzoo.classic import connect_four_v3
 import sys
 import os
@@ -7,7 +6,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from smart_agent import SmartAgent
 from random_agent import RandomAgent
 from loguru import logger
-import time
+
 class TestEnv:
     def __init__(self):#Initialisation d'un environnement pour les tests
         self.agents = ["player_0", "player_1"]
@@ -15,12 +14,14 @@ class TestEnv:
     def action_space(self, agent):
         return None
 
-def test_get_valid_actions(): #Test de la méthode _get_valid_actions
+def test_get_valid_actions(): 
+    """Teste si la méthode retourne bien le masque d'actions correct"""
     agent = SmartAgent(TestEnv())
     mask = [1, 1, 1, 0, 1, 0, 1]
     assert agent._get_valid_actions(mask) == [0, 1, 2, 4, 6]
 
 def test_get_next_row(): 
+    """Teste la méthode get_next_row"""
     agent = SmartAgent(TestEnv())
     board = np.zeros((6, 7, 2), dtype=int)
     assert agent._get_next_row(board, 0) == 5
@@ -31,6 +32,7 @@ def test_get_next_row():
     assert agent._get_next_row(board, 1) is None
 
 def test_check_win_horizontal():
+    """Teste si l'agent gagne selon la position du pion joué"""
     agent = SmartAgent(TestEnv())
     board = np.zeros((6, 7, 2), dtype=int)
     board[5, 0, 0] = 1
@@ -40,6 +42,7 @@ def test_check_win_horizontal():
     assert agent._check_win_from_position(board, 4, 3, channel=0) == False
 
 def test_find_winning_move():
+    """Teste si l'agent trouve bien la colonne de victoire si elle existe"""
     agent = SmartAgent(env=TestEnv())
     board = np.zeros((6, 7, 2), dtype=int)
     board[5, 0, 0] = 1
@@ -49,6 +52,8 @@ def test_find_winning_move():
     assert agent._find_winning_move(board, valid_actions, channel=0) == 2
 
 def test_smart_beats_random():
+    """Teste si l'agent intelligent a au moins 80% de victoires
+    contre un agent aléatoire"""
     env = connect_four_v3.env(render_mode=None)
     env.reset() 
     smart = SmartAgent(env, "Smart")
@@ -60,11 +65,9 @@ def test_smart_beats_random():
         winner = None 
         for agent_id in env.agent_iter():
             obs, reward, term, trunc, _ = env.last()
-            
             if term or trunc:
                 if reward == 1:
-                    winner = agent_id
-                
+                    winner = agent_id 
                 env.step(None)
             else:
                 mask = obs["action_mask"]
@@ -73,19 +76,19 @@ def test_smart_beats_random():
                 else:
                     action = random_bot.choose_action_manual(obs, action_mask=mask)
                 env.step(action)
-        
-        
         if winner == "player_0":
             wins += 1
-
     assert wins >= 40
 
 
-def stat_games(num_games=100):#Statistiques avec maintenant l'agent
-    #intelligent pour num_games parties
-    logger.remove() #Pour éviter qu'à chaques parties la fonction affiche tous
-    #les log ce qui est visuellement très lourd 
-    env = connect_four_v3.env(render_mode=None) #render_mode non visuel pour accéler le processus
+def stat_games(num_games=100):
+    """Statistiques avec maintenant l'agent
+    intelligent pour num_games parties"""
+    logger.remove()
+    """Pour éviter qu'à chaques parties la fonction affiche tous
+    les log ce qui est visuellement très lourd """
+    env = connect_four_v3.env(render_mode=None) 
+    """render_mode non visuel pour accéler le processus"""
     env.reset()
     Length_game=[]
     Smart_Agent_0=SmartAgent(env,"player_0")

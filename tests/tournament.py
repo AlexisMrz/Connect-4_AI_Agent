@@ -10,7 +10,8 @@ from loguru import logger
 
 
 def run_tournament(num_games=100):
-
+    """Crée et fait jouer un tournoi entre un agent intelligent
+    et un agent aléatoire"""
     env=connect_four_v3.env(render_mode=None)
     env.reset()
     Brillant_Agent=SmartAgent(env,player_name="player_0")
