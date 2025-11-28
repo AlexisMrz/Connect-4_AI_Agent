@@ -58,7 +58,7 @@ class MinimaxAgent:
 
         if depth == 0 or not valid_moves:
             return self._evaluate(board)
-
+        valid_moves.sort(key=lambda x: abs(x - 3))
 
         if maximizing:
             max_eval = float('-inf')
