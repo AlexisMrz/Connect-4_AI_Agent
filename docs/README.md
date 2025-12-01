@@ -118,6 +118,9 @@ class Agent:
         #Prend en argument l'état de la grille et choisit un coup valide
         #Renvoie un entier correspondant au numéro de colonne dans laquelle
         #le coup a été joué
+```
+# Bonus : Ajout d'un agent Minimax combiné à Numba pour augmenter la profondeur de l'algorithme Minimax, mais non déployable sur ML-Arena où l'utilisation du package Numba n'est pas autorisée 
+
 
 
 
