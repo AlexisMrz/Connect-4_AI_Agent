@@ -49,7 +49,7 @@ def print_board(board):
 def agent():
     return MinimaxAgent(env=MockEnv())
 
-# --- LES 10 SCÉNARIOS DE TEST ---
+#9 cas test
 
 def test_01_vertical_threat(agent):
     """
