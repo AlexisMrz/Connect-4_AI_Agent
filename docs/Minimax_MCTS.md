@@ -2,7 +2,7 @@
 
 ## Tâche 5.1 : Comprendre l'algorithme  
 
-**1** On alterne entre max et min car chaquue joueur joue chacun son tour, 
+**1** On alterne entre max et min car chaque joueur joue chacun son tour, 
 et on suppose que l'adversaire joue de manière optimale donc cherche à 
 minimiser les gains de notre agent, tandis que nous cherchons à optimiser les 
 gains de notre agent à chaque tour.  
